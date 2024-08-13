@@ -41,6 +41,8 @@ This project is a chat system API developed in Go, using Cassandra as the databa
 - **Ping**: `GET /ping`
   - Checks the availability of the system.
 
+![SWAGGER](swagger/dashboard.png)
+
 ## Usage
 
 The Makefile included in this project provides convenient commands for quickly managing common tasks. Below is an explanation of each command available:
