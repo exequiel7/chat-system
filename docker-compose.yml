@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  chat-system-api:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - .:/go/src/chat-system
+    environment:
+      - SCOPE=local
+      - ENVIRONMENT=local
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cassandra
+      
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=SimpleSnitch
+
