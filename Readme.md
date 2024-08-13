@@ -4,7 +4,7 @@ This project is a chat system API developed in Go, using Cassandra as the databa
 
 ## Requirements
 
-- [Go](https://golang.org/doc/install) 1.22 or higher
+- [Go](https://golang.org/doc/install) 1.21 or higher
 - [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 - [Swag](https://github.com/swaggo/swag) to generate Swagger documentation
 
