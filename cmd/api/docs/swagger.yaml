@@ -1,0 +1,217 @@
+definitions:
+  models.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  models.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  models.Message:
+    properties:
+      content:
+        type: string
+      id:
+        type: string
+      receiver_id:
+        type: string
+      sender_id:
+        type: string
+      timestamp:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      surname:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /messages/history/{senderID}/{receiverID}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the message history between two users
+      parameters:
+      - description: Sender User ID
+        in: path
+        name: senderID
+        required: true
+        type: string
+      - description: Receiver User ID
+        in: path
+        name: receiverID
+        required: true
+        type: string
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Conversation history retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Message'
+                  type: array
+              type: object
+        "400":
+          description: Invalid user ID
+          schema: {}
+        "404":
+          description: No messages found between the specified users
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Get conversation history
+      tags:
+      - messages
+  /messages/send:
+    post:
+      consumes:
+      - application/json
+      description: Sends a message from one user to another
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Message Data
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.Message'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Message sent successfully
+          schema:
+            $ref: '#/definitions/models.APIResponse'
+        "400":
+          description: Invalid request payload
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Send a message
+      tags:
+      - messages
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all registered users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.User'
+                  type: array
+              type: object
+        "404":
+          description: No users found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: List all users
+      tags:
+      - users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Verify the password of a user for login
+      parameters:
+      - description: Login Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema: {}
+        "401":
+          description: Unauthorized
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Verify user password
+      tags:
+      - users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user by providing the necessary details
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema: {}
+        "401":
+          description: Unauthorized
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+      summary: Register a new user
+      tags:
+      - users
+swagger: "2.0"
